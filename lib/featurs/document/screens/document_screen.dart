@@ -1,6 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:doccs/core/colors/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_quill/flutter_quill.dart' as quill;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class DocumentScreen extends ConsumerStatefulWidget {
@@ -16,6 +17,7 @@ class DocumentScreen extends ConsumerStatefulWidget {
 class _DocumentScreenState extends ConsumerState<DocumentScreen> {
   TextEditingController titelController =
       TextEditingController(text: 'Untitled Document');
+  final quill.QuillController _controller = quill.QuillController.basic();
 
   @override
   void dispose() {
@@ -73,7 +75,30 @@ class _DocumentScreenState extends ConsumerState<DocumentScreen> {
         ],
       ),
       body: Center(
-        child: Text(widget.id),
+        child: Column(
+          children: [
+            const SizedBox(height: 10),
+            quill.QuillToolbar.basic(controller: _controller),
+            const SizedBox(height: 10),
+            Expanded(
+              child: SizedBox(
+                width: 750,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Card(
+                    child: Padding(
+                      padding: const EdgeInsets.all(30.0),
+                      child: quill.QuillEditor.basic(
+                        controller: _controller,
+                        readOnly: false,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
