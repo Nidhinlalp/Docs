@@ -1,5 +1,8 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:doccs/core/colors/colors.dart';
+import 'package:doccs/featurs/auth/repository/auth_repository.dart';
+import 'package:doccs/featurs/document/repository/document_repository.dart';
+import 'package:doccs/models/error_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart' as quill;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -18,11 +21,37 @@ class _DocumentScreenState extends ConsumerState<DocumentScreen> {
   TextEditingController titelController =
       TextEditingController(text: 'Untitled Document');
   final quill.QuillController _controller = quill.QuillController.basic();
+  ErrorModel? errorModel;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchDocumentData();
+  }
+
+  fetchDocumentData() async {
+    errorModel = await ref
+        .read(documentRepositoryProvider)
+        .getDocumentById(ref.read(userProvider)!.token, widget.id);
+
+    if (errorModel!.data != null) {
+      titelController.text = errorModel!.data.title;
+      setState(() {});
+    }
+  }
 
   @override
   void dispose() {
     super.dispose();
     titelController.dispose();
+  }
+
+  void updateTitle(WidgetRef ref, String title) {
+    ref.read(documentRepositoryProvider).updateTitle(
+          token: ref.read(userProvider)!.token,
+          id: widget.id,
+          title: title,
+        );
   }
 
   @override
@@ -41,6 +70,7 @@ class _DocumentScreenState extends ConsumerState<DocumentScreen> {
               SizedBox(
                 width: 180,
                 child: TextField(
+                  onSubmitted: (value) => updateTitle(ref, value),
                   controller: titelController,
                   decoration: const InputDecoration(
                     border: InputBorder.none,
