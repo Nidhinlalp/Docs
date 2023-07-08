@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:doccs/featurs/auth/repository/auth_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -15,6 +17,7 @@ class LoginScreen extends ConsumerWidget {
     if (errorModel.error == null) {
       ref.read(userProvider.notifier).update((state) => errorModel.data);
     } else {
+      log(errorModel.error.toString());
       sMessenger.showSnackBar(
         SnackBar(
           content: Text(errorModel.error!),
