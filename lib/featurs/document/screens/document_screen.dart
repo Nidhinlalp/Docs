@@ -70,15 +70,15 @@ class _DocumentScreenState extends ConsumerState<DocumentScreen> {
       setState(() {});
     }
 
-    _controller!.document.changes.listen((event) {
-      if (event.before == quill.ChangeSource.LOCAL) {
-        Map<String, dynamic> map = {
-          'delta': event.change,
-          'room': widget.id,
-        };
-        socketRepository.typing(map);
-      }
-    });
+    // _controller!.document.changes.listen((event) {
+    //   if (event.before == quill.ChangeSource.LOCAL) {
+    //     Map<String, dynamic> map = {
+    //       'delta': event.change,
+    //       'room': widget.id,
+    //     };
+    //     socketRepository.typing(map);
+    //   }
+    // });
   }
 
   @override
@@ -97,6 +97,7 @@ class _DocumentScreenState extends ConsumerState<DocumentScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     if (_controller == null) {
       return const Scaffold(
         body: Loader(),
@@ -114,7 +115,7 @@ class _DocumentScreenState extends ConsumerState<DocumentScreen> {
               ),
               const SizedBox(width: 10),
               SizedBox(
-                width: 180,
+                width: size.width * 0.3,
                 child: TextField(
                   onSubmitted: (value) => updateTitle(ref, value),
                   controller: titelController,

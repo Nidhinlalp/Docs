@@ -41,59 +41,69 @@ class HomeScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
-        appBar: AppBar(
-          actions: [
-            IconButton(
-              onPressed: () => createDocument(context, ref),
-              icon: const Icon(Icons.add_to_drive),
+      appBar: AppBar(
+        title: Text('Hi, ${ref.watch(userProvider)!.name}'),
+        actions: [
+          IconButton(
+            onPressed: () => createDocument(context, ref),
+            icon: const Icon(Icons.add_to_drive),
+          ),
+          IconButton(
+            onPressed: () => signOut(ref),
+            icon: const Icon(
+              Icons.logout_rounded,
+              color: kRedColor,
             ),
-            IconButton(
-              onPressed: () => signOut(ref),
-              icon: const Icon(
-                Icons.logout_rounded,
-                color: kRedColor,
-              ),
-            )
-          ],
-        ),
-        body: FutureBuilder(
-          future: ref
-              .watch(documentRepositoryProvider)
-              .getDocuments(ref.watch(userProvider)!.token),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Loader();
-            }
-            return Center(
-              child: Container(
-                margin: const EdgeInsets.only(top: 10),
-                width: 600,
-                child: ListView.builder(
-                  itemCount: snapshot.data!.data.length,
-                  itemBuilder: (context, index) {
-                    DocumentModel document = snapshot.data!.data[index];
+          )
+        ],
+      ),
+      body: FutureBuilder(
+        future: ref
+            .watch(documentRepositoryProvider)
+            .getDocuments(ref.watch(userProvider)!.token),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Loader();
+          }
+          return Center(
+            child: Container(
+              margin: const EdgeInsets.only(top: 10),
+              width: 600,
+              child: ListView.builder(
+                itemCount: snapshot.data!.data.length,
+                itemBuilder: (context, index) {
+                  DocumentModel document = snapshot.data!.data[index];
 
-                    return SizedBox(
-                      height: 50,
-                      child: InkWell(
-                        onTap: () => navigateToDocument(context, document.id),
-                        child: Card(
-                          child: Center(
-                            child: Text(
-                              document.title,
-                              style: const TextStyle(
-                                fontSize: 20,
+                  return snapshot.data!.data.length == 0
+                      ? const Center(
+                          child: Text('Create Own Your Doc'),
+                        )
+                      : Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: SizedBox(
+                            height: 50,
+                            child: InkWell(
+                              onTap: () =>
+                                  navigateToDocument(context, document.id),
+                              child: Card(
+                                child: Center(
+                                  child: Text(
+                                    document.title,
+                                    style: const TextStyle(
+                                      fontSize: 20,
+                                    ),
+                                  ),
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      ),
-                    );
-                  },
-                ),
+                        );
+                },
               ),
-            );
-          },
-        ));
+            ),
+          );
+        },
+      ),
+    );
   }
 }

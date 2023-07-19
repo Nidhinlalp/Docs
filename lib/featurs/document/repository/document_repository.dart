@@ -2,7 +2,7 @@
 import 'dart:convert';
 import 'dart:developer';
 
-import 'package:doccs/constant.dart';
+import 'package:doccs/core/common/constant/constant.dart';
 import 'package:doccs/models/document_model.dart';
 import 'package:doccs/models/error_model.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -72,6 +72,7 @@ class DocumentRepository {
           'x-auth-token': token,
         },
       );
+
       switch (res.statusCode) {
         case 200:
           List<DocumentModel> documents = [];

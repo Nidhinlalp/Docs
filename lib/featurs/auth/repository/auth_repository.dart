@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart';
 
-import '../../../constant.dart';
+import '../../../core/common/constant/constant.dart';
 import '../../../models/error_model.dart';
 import '../../../models/user_model.dart';
 import 'local_storage_repository.dart';
