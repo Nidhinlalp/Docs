@@ -3,6 +3,7 @@ import 'package:doccs/core/common/widgets/loader.dart';
 import 'package:doccs/featurs/auth/repository/auth_repository.dart';
 import 'package:doccs/featurs/document/repository/document_repository.dart';
 import 'package:doccs/models/document_model.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -95,39 +96,64 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     DocumentModel document = snapshot.data!.data[index];
 
                     return Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 15.0, vertical: 10),
                       child: SizedBox(
                         height: 50,
                         child: InkWell(
                           onTap: () => navigateToDocument(context, document.id),
-                          child: Slidable(
-                            key: const ValueKey(0),
-                            startActionPane: ActionPane(
-                                motion: const ScrollMotion(),
-                                children: [
-                                  SlidableAction(
-                                    onPressed: (context) =>
-                                        deletDoc(document.id),
-                                    backgroundColor: const Color(0xFFFE4A49),
-                                    foregroundColor: Colors.white,
-                                    icon: Icons.delete,
-                                    label: 'Delete',
+                          child: !kIsWeb
+                              ? Slidable(
+                                  key: const ValueKey(0),
+                                  startActionPane: ActionPane(
+                                      motion: const ScrollMotion(),
+                                      children: [
+                                        SlidableAction(
+                                          onPressed: (context) =>
+                                              deletDoc(document.id),
+                                          backgroundColor:
+                                              const Color(0xFFFE4A49),
+                                          foregroundColor: Colors.white,
+                                          icon: Icons.delete_outline_outlined,
+                                          label: 'Delete',
+                                        ),
+                                      ]),
+                                  child: Container(
+                                    height: 60,
+                                    decoration: BoxDecoration(
+                                      border: Border.all(color: Colors.black),
+                                    ),
+                                    child: ListTile(
+                                      title: Text(
+                                        document.title,
+                                        style: const TextStyle(
+                                          fontSize: 20,
+                                        ),
+                                      ),
+                                    ),
                                   ),
-                                ]),
-                            child: Container(
-                              height: 60,
-                              decoration: BoxDecoration(
-                                  border: Border.all(color: Colors.black)),
-                              child: ListTile(
-                                title: Text(
-                                  document.title,
-                                  style: const TextStyle(
-                                    fontSize: 20,
+                                )
+                              : Container(
+                                  height: 60,
+                                  decoration: BoxDecoration(
+                                    border: Border.all(color: Colors.black),
+                                  ),
+                                  child: ListTile(
+                                    title: Text(
+                                      document.title,
+                                      style: const TextStyle(
+                                        fontSize: 20,
+                                      ),
+                                    ),
+                                    trailing: IconButton(
+                                      onPressed: () => deletDoc(document.id),
+                                      icon: const Icon(
+                                        Icons.delete_forever_rounded,
+                                        color: Colors.red,
+                                      ),
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ),
-                          ),
                         ),
                       ),
                     );
