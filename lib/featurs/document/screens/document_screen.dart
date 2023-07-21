@@ -35,15 +35,15 @@ class _DocumentScreenState extends ConsumerState<DocumentScreen> {
   @override
   void initState() {
     super.initState();
-    socketRepository.joinRoom(widget.id);
+    // socketRepository.joinRoom(widget.id);
     fetchDocumentData();
-    socketRepository.changeListener((data) {
-      _controller?.compose(
-        quill.Delta.fromJson(data['delta']),
-        _controller?.selection ?? const TextSelection.collapsed(offset: 0),
-        quill.ChangeSource.REMOTE,
-      );
-    });
+    // socketRepository.changeListener((data) {
+    //   _controller?.compose(
+    //     quill.Delta.fromJson(data['delta']),
+    //     _controller?.selection ?? const TextSelection.collapsed(offset: 0),
+    //     quill.ChangeSource.REMOTE,
+    //   );
+    // });
     Timer.periodic(const Duration(seconds: 2), (timer) {
       socketRepository.autoSave(<String, dynamic>{
         'delta': _controller!.document.toDelta(),

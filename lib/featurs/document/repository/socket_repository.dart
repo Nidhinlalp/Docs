@@ -6,9 +6,9 @@ class SocketRepository {
   final _socketClient = SocketClient.instance.socket!;
   Socket get socketClient => _socketClient;
 
-  void joinRoom(String documentId) {
-    _socketClient.emit('join', documentId);
-  }
+  // void joinRoom(String documentId) {
+  //   _socketClient.emit('join', documentId);
+  // }
 
   void autoSave(Map<String, dynamic> data) {
     _socketClient.emit('save', data);
@@ -18,7 +18,7 @@ class SocketRepository {
   //   _socketClient.emit('typing', data);
   // }
 
-  void changeListener(Function(Map<String, dynamic>) func) {
-    _socketClient.on('changes', (data) => func(data));
-  }
+  // void changeListener(Function(Map<String, dynamic>) func) {
+  //   _socketClient.on('changes', (data) => func(data));
+  // }
 }
