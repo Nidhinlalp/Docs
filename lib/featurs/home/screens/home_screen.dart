@@ -55,7 +55,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Hi, ${ref.watch(userProvider)!.name}'),
+        title: Text(
+          'Hi, ${ref.watch(userProvider)!.name}',
+          overflow: TextOverflow.ellipsis,
+        ),
         actions: [
           IconButton(
             onPressed: () => setState(() {}),
