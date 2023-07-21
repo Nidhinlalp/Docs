@@ -99,7 +99,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
                     return Padding(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 15.0, vertical: 10),
+                          horizontal: 8.0, vertical: 10),
                       child: SizedBox(
                         height: 50,
                         child: InkWell(
