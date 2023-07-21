@@ -1,4 +1,5 @@
 import 'package:doccs/core/colors/colors.dart';
+import 'package:doccs/core/common/widgets/alert_box.dart';
 import 'package:doccs/core/common/widgets/loader.dart';
 import 'package:doccs/featurs/auth/repository/auth_repository.dart';
 import 'package:doccs/featurs/document/repository/document_repository.dart';
@@ -69,7 +70,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             icon: const Icon(Icons.add_to_drive),
           ),
           IconButton(
-            onPressed: () => signOut(ref),
+            onPressed: () => showMyDialog(
+                context, () => signOut(ref), "Would you like to sign out"),
             icon: const Icon(
               Icons.logout_rounded,
               color: kRedColor,
@@ -106,28 +108,53 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                               ? Slidable(
                                   key: const ValueKey(0),
                                   startActionPane: ActionPane(
-                                      motion: const ScrollMotion(),
-                                      children: [
-                                        SlidableAction(
-                                          onPressed: (context) =>
-                                              deletDoc(document.id),
-                                          backgroundColor:
-                                              const Color(0xFFFE4A49),
-                                          foregroundColor: Colors.white,
-                                          icon: Icons.delete_outline_outlined,
-                                          label: 'Delete',
+                                    motion: const ScrollMotion(),
+                                    children: [
+                                      SlidableAction(
+                                        autoClose: true,
+                                        onPressed: (context) => showMyDialog(
+                                          context,
+                                          () => deletDoc(document.id),
+                                          "Would you like to delete this document",
                                         ),
-                                      ]),
-                                  child: Container(
-                                    height: 60,
-                                    decoration: BoxDecoration(
-                                      border: Border.all(color: Colors.black),
-                                    ),
-                                    child: ListTile(
-                                      title: Text(
-                                        document.title,
-                                        style: const TextStyle(
-                                          fontSize: 20,
+                                        backgroundColor:
+                                            const Color(0xFFFE4A49),
+                                        foregroundColor: Colors.white,
+                                        icon: Icons.delete_outline_outlined,
+                                        label: 'Delete',
+                                      ),
+                                    ],
+                                  ),
+                                  endActionPane: ActionPane(
+                                    motion: const ScrollMotion(),
+                                    children: [
+                                      SlidableAction(
+                                        autoClose: true,
+                                        onPressed: (context) =>
+                                            navigateToDocument(
+                                                context, document.id),
+                                        backgroundColor:
+                                            const Color(0xFF0392CF),
+                                        foregroundColor: Colors.white,
+                                        icon: Icons.edit_document,
+                                        label: 'Edit',
+                                      ),
+                                    ],
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 8.0),
+                                    child: Container(
+                                      height: 60,
+                                      decoration: BoxDecoration(
+                                        border: Border.all(color: Colors.black),
+                                      ),
+                                      child: ListTile(
+                                        title: Text(
+                                          document.title,
+                                          style: const TextStyle(
+                                            fontSize: 20,
+                                          ),
                                         ),
                                       ),
                                     ),
