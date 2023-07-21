@@ -5,11 +5,16 @@ import 'package:doccs/featurs/document/repository/document_repository.dart';
 import 'package:doccs/models/document_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:routemaster/routemaster.dart';
 
-class HomeScreen extends ConsumerWidget {
+class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
+  @override
+  ConsumerState<ConsumerStatefulWidget> createState() => _HomeScreenState();
+}
 
+class _HomeScreenState extends ConsumerState<HomeScreen> {
   void signOut(WidgetRef ref) {
     ref.read(authRepositoryProvider).signOut();
     ref.read(userProvider.notifier).update((state) => null);
@@ -38,12 +43,26 @@ class HomeScreen extends ConsumerWidget {
     Routemaster.of(context).push('/document/$documentId');
   }
 
+  void deletDoc(String id) {
+    String token = ref.read(userProvider)!.token;
+    ref.read(documentRepositoryProvider).deleteDocuments(token, id);
+    setState(() {});
+  }
+
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Hi, ${ref.watch(userProvider)!.name}'),
         actions: [
+          IconButton(
+            onPressed: () => setState(() {}),
+            icon: const Icon(
+              Icons.refresh_rounded,
+              color: Colors.purple,
+              size: 25,
+            ),
+          ),
           IconButton(
             onPressed: () => createDocument(context, ref),
             icon: const Icon(Icons.add_to_drive),
@@ -54,7 +73,7 @@ class HomeScreen extends ConsumerWidget {
               Icons.logout_rounded,
               color: kRedColor,
             ),
-          )
+          ),
         ],
       ),
       body: FutureBuilder(
@@ -65,43 +84,62 @@ class HomeScreen extends ConsumerWidget {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Loader();
           }
-          return Center(
-            child: Container(
-              margin: const EdgeInsets.only(top: 10),
-              width: 600,
-              child: ListView.builder(
-                itemCount: snapshot.data!.data.length,
-                itemBuilder: (context, index) {
-                  DocumentModel document = snapshot.data!.data[index];
+          if (snapshot.hasData) {
+            return Center(
+              child: Container(
+                margin: const EdgeInsets.only(top: 10),
+                width: 600,
+                child: ListView.builder(
+                  itemCount: snapshot.data!.data.length,
+                  itemBuilder: (context, index) {
+                    DocumentModel document = snapshot.data!.data[index];
 
-                  return snapshot.data!.data.length == 0
-                      ? const Center(
-                          child: Text('Create Own Your Doc'),
-                        )
-                      : Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: SizedBox(
-                            height: 50,
-                            child: InkWell(
-                              onTap: () =>
-                                  navigateToDocument(context, document.id),
-                              child: Card(
-                                child: Center(
-                                  child: Text(
-                                    document.title,
-                                    style: const TextStyle(
-                                      fontSize: 20,
-                                    ),
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                      child: SizedBox(
+                        height: 50,
+                        child: InkWell(
+                          onTap: () => navigateToDocument(context, document.id),
+                          child: Slidable(
+                            key: const ValueKey(0),
+                            startActionPane: ActionPane(
+                                motion: const ScrollMotion(),
+                                children: [
+                                  SlidableAction(
+                                    onPressed: (context) =>
+                                        deletDoc(document.id),
+                                    backgroundColor: const Color(0xFFFE4A49),
+                                    foregroundColor: Colors.white,
+                                    icon: Icons.delete,
+                                    label: 'Delete',
+                                  ),
+                                ]),
+                            child: Container(
+                              height: 60,
+                              decoration: BoxDecoration(
+                                  border: Border.all(color: Colors.black)),
+                              child: ListTile(
+                                title: Text(
+                                  document.title,
+                                  style: const TextStyle(
+                                    fontSize: 20,
                                   ),
                                 ),
                               ),
                             ),
                           ),
-                        );
-                },
+                        ),
+                      ),
+                    );
+                  },
+                ),
               ),
-            ),
-          );
+            );
+          } else {
+            return const Center(
+              child: Text('Somthing went wronq'),
+            );
+          }
         },
       ),
     );

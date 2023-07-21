@@ -7,6 +7,7 @@ import 'package:doccs/featurs/auth/repository/auth_repository.dart';
 import 'package:doccs/featurs/document/repository/document_repository.dart';
 import 'package:doccs/featurs/document/repository/socket_repository.dart';
 import 'package:doccs/models/error_model.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_quill/flutter_quill.dart' as quill;
@@ -69,16 +70,6 @@ class _DocumentScreenState extends ConsumerState<DocumentScreen> {
       );
       setState(() {});
     }
-
-    // _controller!.document.changes.listen((event) {
-    //   if (event.before == quill.ChangeSource.LOCAL) {
-    //     Map<String, dynamic> map = {
-    //       'delta': event.change,
-    //       'room': widget.id,
-    //     };
-    //     socketRepository.typing(map);
-    //   }
-    // });
   }
 
   @override
@@ -115,7 +106,7 @@ class _DocumentScreenState extends ConsumerState<DocumentScreen> {
               ),
               const SizedBox(width: 10),
               SizedBox(
-                width: size.width * 0.3,
+                width: size.width * 0.4,
                 child: TextField(
                   onSubmitted: (value) => updateTitle(ref, value),
                   controller: titelController,
@@ -141,28 +132,30 @@ class _DocumentScreenState extends ConsumerState<DocumentScreen> {
           ),
         ),
         actions: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: ElevatedButton.icon(
-              onPressed: () {
-                Clipboard.setData(ClipboardData(
-                        text: 'http://localhost:3000/#/document/${widget.id}'))
-                    .then(
-                  (value) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text(
-                          'Link copied!',
+          if (kIsWeb)
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: ElevatedButton.icon(
+                onPressed: () {
+                  Clipboard.setData(
+                    ClipboardData(
+                        text: 'http://localhost:3000/#/document/${widget.id}'),
+                  ).then(
+                    (value) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text(
+                            'Link copied!',
+                          ),
                         ),
-                      ),
-                    );
-                  },
-                );
-              },
-              label: const Text('Share'),
-              icon: const Icon(Icons.lock),
+                      );
+                    },
+                  );
+                },
+                label: const Text('Share'),
+                icon: const Icon(Icons.lock),
+              ),
             ),
-          ),
         ],
       ),
       body: Center(

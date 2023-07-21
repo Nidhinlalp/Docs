@@ -102,6 +102,20 @@ class DocumentRepository {
     return error;
   }
 
+  deleteDocuments(String token, String id) async {
+    try {
+      await _client.delete(
+        Uri.parse('$host/doc/$id'),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'x-auth-token': token,
+        },
+      );
+    } catch (e) {
+      log(e.toString());
+    }
+  }
+
   void updateTitle({
     required String token,
     required String id,

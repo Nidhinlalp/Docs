@@ -28,6 +28,17 @@ documentRouter.get("/docs/me", auth, async (req, res) => {
     }
 });
 
+documentRouter.delete("/doc/:id", auth, async (req, res) => {
+    console.log("delete");
+    try {
+        const { id } = req.params
+        let documents = await Document.deleteOne({ _id: id });
+        res.json(documents);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
 documentRouter.get("/doc/:id", auth, async (req, res) => {
     try {
         const document = await Document.findById(req.params.id);

@@ -51,9 +51,3 @@ const saveData = async (data) => {
 server.listen(PORT, "0.0.0.0", () => {
     console.log(`connected at port ${PORT}`);
 });
-
-
-
-
-
-//const DB = "mongodb+srv://devnidhin2020:Nidhin2020@cluster0.fdnc4cr.mongodb.net/";
