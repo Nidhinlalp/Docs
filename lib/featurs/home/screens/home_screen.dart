@@ -176,7 +176,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                       ),
                                     ),
                                     trailing: IconButton(
-                                      onPressed: () => deletDoc(document.id),
+                                      onPressed: () => showMyDialog(
+                                        context,
+                                        () => deletDoc(document.id),
+                                        "Would you like to delete this document",
+                                      ),
                                       icon: const Icon(
                                         Icons.delete_forever_rounded,
                                         color: Colors.red,

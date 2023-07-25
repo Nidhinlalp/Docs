@@ -102,7 +102,7 @@ class DocumentRepository {
     return error;
   }
 
-  deleteDocuments(String token, String id) async {
+  void deleteDocuments(String token, String id) async {
     try {
       await _client.delete(
         Uri.parse('$host/doc/$id'),
